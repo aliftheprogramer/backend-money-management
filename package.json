@@ -1,0 +1,31 @@
+{
+  "name": "tugas_kelompok",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed:users": "node seeder/userSeed.js",
+    "seed:categories": "node seeder/categorySeed.js",
+    "seed:transactions": "node seeder/transactionSeed.js",
+    "seed:budgets": "node seeder/budgedSeed.js",
+    "seed:all": "node seeder/runAllSeeds.js",
+    "seed:wallets": "node seeder/waletSeed.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "env": "^0.0.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.16.0",
+    "mongoose": "^8.15.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.28"
+  }
+}
