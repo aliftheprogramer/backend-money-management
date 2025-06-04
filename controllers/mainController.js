@@ -37,18 +37,19 @@ const addTransactionPengeluaran = async (req, res) => {
 
     const savedTransaction = await newTransaction.save();
 
-    const Wallet = await Wallet.findOne({ userId: req.user.id });
-    if (Wallet) {
-      Wallet.totalBalance -= Number(amount);
-      Wallet.availableBalance -= Number(amount);
-      Wallet.lastUpdated = new Date();
-      await Wallet.save();
+    // Fix: Rename variable to avoid conflict with the imported model
+    const wallet = await Wallet.findOne({ userId: req.user.id });
+    if (wallet) {
+      wallet.totalBalance -= Number(amount);
+      wallet.availableBalance -= Number(amount);
+      wallet.lastUpdated = new Date();
+      await wallet.save();
     }
 
     res.status(201).json({
       transaction: savedTransaction,
       categoryType: transactionCategory.type,
-      walletBalance: Wallet ? Wallet.totalBalance : null,
+      walletBalance: wallet ? wallet.totalBalance : null,
     });
   } catch (error) {
     console.error("Error adding transaction:", error);
@@ -90,19 +91,20 @@ const addTransactionPemasukan = async (req, res) => {
 
     const savedTransaction = await newTransaction.save();
 
-    const Wallet = await Wallet.findOne({ userId: req.user.id });
+    // Fix: Rename variable to avoid conflict with the imported model 
+    const wallet = await Wallet.findOne({ userId: req.user.id });
 
-    if (Wallet) {
-      Wallet.totalBalance += Number(amount);
-      Wallet.availableBalance += Number(amount);
-      Wallet.lastUpdated = new Date();
-      await Wallet.save();
+    if (wallet) {
+      wallet.totalBalance += Number(amount);
+      wallet.availableBalance += Number(amount);
+      wallet.lastUpdated = new Date();
+      await wallet.save();
     }
 
     res.status(201).json({
       transaction: savedTransaction,
       categoryType: transactionCategory.type,
-      walletBalance: Wallet ? Wallet.totalBalance : null,
+      walletBalance: wallet ? wallet.totalBalance : null,
     });
   } catch (error) {
     console.error("Error adding transaction:", error);
@@ -316,6 +318,56 @@ const deleteTransaction = async (req, res) => {
   }
 };
 
+// Tambahkan fungsi baru ini
+
+// Get all transactions sorted by date (newest first)
+const getTransactionsSortedByDate = async (req, res) => {
+  try {
+    // Filter by user ID for security
+    const transactions = await Transaction.find({
+      userId: req.user.id,
+    })
+      .populate({
+        path: "categoryId",
+        select: "name type icon color",
+      })
+      .sort({ date: -1 }); // -1 untuk descending (terbaru dulu)
+
+    res.status(200).json({
+      count: transactions.length,
+      transactions,
+    });
+  } catch (error) {
+    console.error("Error fetching transactions by date:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
+
+// Get all transactions sorted by amount (highest first)
+const getTransactionsSortedByAmount = async (req, res) => {
+  try {
+    // Filter by user ID for security
+    const transactions = await Transaction.find({
+      userId: req.user.id
+    })
+    .populate({
+      path: "categoryId",
+      select: "name type icon color"
+    })
+    .sort({ amount: -1 }); // -1 untuk descending (nilai tertinggi dulu)
+    
+    res.status(200).json({
+      count: transactions.length,
+      transactions
+    });
+  } catch (error) {
+    console.error("Error fetching transactions by amount:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
 export {
   addTransactionPengeluaran,
   addTransactionPemasukan,
@@ -324,4 +376,6 @@ export {
   showTransactionByid,
   editTransaction,
   deleteTransaction,
+  getTransactionsSortedByDate,
+  getTransactionsSortedByAmount,
 };

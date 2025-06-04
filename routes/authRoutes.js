@@ -13,4 +13,5 @@ authRouter.post('/login', login);
 // Get current user route (protected)
 authRouter.get('/me', verifyToken, getCurrentUser);
 
+
 export default authRouter;

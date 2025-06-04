@@ -6,6 +6,7 @@ import router from "./routes/mainRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import walletRouter from "./routes/walletRoutes.js";
+import budgetRouter from './routes/budgetRoutes.js';
 
 const app = express();
 const port = 3000;
@@ -16,7 +17,7 @@ app.use("/api/main", router);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/wallet", walletRouter); 
-
+app.use("/api/budget", budgetRouter);
 
 mongoose
   .connect(process.env.MONGODB_CONNECTION_STRING)

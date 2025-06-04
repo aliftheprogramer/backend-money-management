@@ -7,7 +7,7 @@ import { verifyToken } from "../controllers/authController.js";
 
 
 userRouter.get('/profile/:id', verifyToken, getUserProfile);
-userRouter.put('/profile', verifyToken, updateUserProfile);
-userRouter.get('/summary', verifyToken, getUserTransactionSummary);
+userRouter.put('/profile/:id', verifyToken, updateUserProfile);
+userRouter.get('/summary/:id', verifyToken, getUserTransactionSummary);
 
 export default userRouter;

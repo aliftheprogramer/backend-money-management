@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Budget from '../models/budgedModel.js';
+import Budget from '../models/budgetModel.js';
 import User from '../models/userModel.js';
 import Category from '../models/categoryModel.js';
 
