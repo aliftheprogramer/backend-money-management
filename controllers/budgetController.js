@@ -185,12 +185,16 @@ export const getBudgetAlerts = async (req, res) => {
       ]
     });
     
+    console.log(`Found ${budgets.length} budgets for user ${req.user.id}`);
+    
     const alerts = [];
     
     for (const budget of budgets) {
       const spending = await getBudgetSpending(budget, req.user.id);
       const remaining = budget.amount - spending.spent;
       const percentage = budget.amount > 0 ? Math.round((spending.spent / budget.amount) * 100) : 0;
+      
+      console.log(`Budget "${budget.category}" (${budget.period}): spent ${spending.spent}/${budget.amount} (${percentage}%)`);
       
       // Generate warnings based on budget usage
       if (percentage >= 90 && remaining >= 0) {
@@ -220,6 +224,7 @@ export const getBudgetAlerts = async (req, res) => {
       }
     }
     
+    console.log(`Generated ${alerts.length} alerts`);
     res.status(200).json(alerts);
   } catch (error) {
     console.error("Error getting budget alerts:", error);
